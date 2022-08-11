@@ -1,0 +1,72 @@
+:root {
+    --yellow: #febb75;
+    --light-pink: #f2cac8;
+    --pink: #fb948f;
+    --violet: #c36b84;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--fontColor);
+    font-family: helvetica;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    float: left;
+}
+
+a {
+    display: block;
+    padding: 8px;
+    color: white;
+    text-decoration: none;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10vh;
+    background-color: black;
+}
+
+
+
+
+.light-theme{
+    --bg: var(--yellow);
+    --fontColor: var(--violet);
+    --btnBg: var(--pink);
+    --btnFontColor: var(--violet);
+}
+
+.dark-theme {
+    --bg: var(--violet);
+    --fontColor: var(--yellow);
+    --btnBg: var(--light-pink);
+    --btnFontColor: var(--yellow);
+}
+
+.btn {
+    float: right;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    color: var(--btnFontColor);
+    background-color: var(--btnBg);
+}
