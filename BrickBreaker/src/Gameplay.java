@@ -2,16 +2,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Iterator;
+import java.io.PrintWriter;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Font;
-
+import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Rectangle;
-
-import javax.swing.JPanel;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private boolean play = false;
@@ -25,6 +23,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private int ballXDir = -1;
     private int ballYDir = -2;
     private Mapgenerator map;
+    String text = "";
 
     public Gameplay() {
         map = new Mapgenerator(3, 7);
@@ -33,6 +32,18 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         setFocusTraversalKeysEnabled(false);
         timer = new Timer(delay, this);
         timer.start();
+    }
+
+    public static void write(String text, int score) {
+        try {
+            PrintWriter pw = new PrintWriter("BrickBreaker/src/HighScoreList.txt");
+            pw.println(text + " " + score);
+            pw.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (Exception e) {
+            System.out.println("an error occured.");
+            e.printStackTrace();
+        }
     }
 
     public void paint(Graphics g) {
@@ -49,7 +60,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         g.drawString("" + score, 590, 30);
 
         // BORDERS
-        g.setColor(Color.yellow);
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, 3, 592);
         g.fillRect(0, 0, 692, 3);
         g.fillRect(691, 0, 3, 592);
@@ -62,28 +73,29 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         g.setColor(Color.yellow);
         g.fillOval(ballposX, ballposY, 20, 20);
 
+        // GAME ENDS
         if(totalBricks <= 0) {
             play = false;
             ballXDir = 0;
             ballYDir = 0;
-            g.setColor(Color.red);
+            g.setColor(Color.white);
             g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("You Won, Score: " + score, 190, 300);
 
-            g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("Press Enter to Restart.", 230, 350);
+            g.drawString("You Won, Score: " + score, 150, 300);
+            g.drawString("Enter Name: ", 250, 350);
+            g.drawString("Press Enter to Restart.", 350, 350);
         }
 
         if(ballposY > 570) {
             play = false;
             ballXDir = 0;
             ballYDir = 0;
-            g.setColor(Color.red);
-            g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("Game Over, Score: " + score, 190, 300);
-
-            g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("Press Enter to Restart.", 220, 350);
+            g.setColor(Color.white);
+            
+            g.drawString("Game Over, Score: " + score, 150, 300);
+            g.drawString("Enter Name: ", 150, 350);
+            g.drawString(text, 400, 350);
+            g.drawString("Press Enter to Restart.", 150, 450);
         }
 
         g.dispose();
@@ -102,12 +114,26 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_D) {
+            if(!play && (ballposY > 570 || totalBricks <= 0)){
+                text += e.getKeyChar();
+
+                System.out.println(text);
+                write(text, score);
+            }
+
             if(playerX >= 600)
                 playerX = 600;
             else
                 moveRight();
         }
         if(e.getKeyCode() == KeyEvent.VK_A) {
+            if(!play && (ballposY > 570 || totalBricks <= 0)){
+                text += e.getKeyChar();
+
+                System.out.println(text);
+                write(text, score);
+            }
+            
             if(playerX < 10)
                 playerX = 10;
             else
@@ -127,6 +153,12 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
 
                 repaint();
             }
+        }
+        if(!play && (ballposY > 570 || totalBricks <= 0)) {
+            text += e.getKeyChar();
+
+            System.out.println(text);
+            write(text, score);
         }
     }
 
