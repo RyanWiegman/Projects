@@ -2,13 +2,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
 import java.awt.Rectangle;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener{
@@ -24,6 +29,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private int ballYDir = -2;
     private Mapgenerator map;
     String text = "";
+    static File scoreFile = new File("BrickBreaker/src/HighScoreList.txt");
+    List<ScoreList> list = new ArrayList<>();
 
     public Gameplay() {
         map = new Mapgenerator(3, 7);
@@ -34,9 +41,48 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         timer.start();
     }
 
+    static int partition(List<ScoreList> array, int firstIndex, int lastIndex) {
+        int pivot = array.get(lastIndex).getScore();    // int pivot = array[high];
+        int i = (firstIndex - 1);// int i = (low - 1);
+
+        for(int index = firstIndex; index < lastIndex; index++) {
+            if(array.get(index).getScore() <= pivot) {
+                i++;
+
+                ScoreList temp = array.get(i);
+                array.set(i, array.get(index));
+                array.set(index, temp);
+            }
+        }
+
+        ScoreList temp = array.get(i + 1);
+        array.set((i + 1), array.get(lastIndex));
+        array.set(lastIndex, temp);
+
+        return (i + 1);
+    }
+
+    public void quickSort(List<ScoreList> array, int low, int high) {
+        if(low < high) {
+            int pi = partition(array, low, high);
+
+            quickSort(array, low, pi - 1);
+            quickSort(array, pi + 1, high);
+        }
+    }
+
     public static void write(String text, int score) {
         try {
             PrintWriter pw = new PrintWriter("BrickBreaker/src/HighScoreList.txt");
+            Scanner scan = new Scanner(scoreFile);
+            System.out.println("IN WRITE FUNC: " + text);
+
+            if(scoreFile.length() == 0)
+                pw.println(text + " " + score);
+            else {
+
+            }
+
             pw.println(text + " " + score);
             pw.close();
             System.out.println("Successfully wrote to the file.");
@@ -118,7 +164,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                 text += e.getKeyChar();
 
                 System.out.println(text);
-                write(text, score);
+                //write(text, score);
             }
 
             if(playerX >= 600)
@@ -131,7 +177,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                 text += e.getKeyChar();
 
                 System.out.println(text);
-                write(text, score);
+                //write(text, score);
             }
             
             if(playerX < 10)
@@ -141,6 +187,15 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         }
         if(e.getKeyCode() == KeyEvent.VK_ENTER) {
             if(!play) {
+                if(text.length() != 0){
+                    ScoreList tempScore = new ScoreList(text, score);
+                    list.add(new ScoreList(text, score));
+                    int lastIndex = list.size() - 1;
+                    quickSort(list, 0, lastIndex);
+
+                    text = "";
+                    // WRITE TO FILE.
+                }
                 play = true;
                 ballposX = 120;
                 ballposY = 350;
@@ -158,7 +213,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
             text += e.getKeyChar();
 
             System.out.println(text);
-            write(text, score);
+            //write(text, score);
         }
     }
 

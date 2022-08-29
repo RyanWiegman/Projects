@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class App {
+    
+
     public static void createFile() {
         try {
             File highScore = new File("BrickBreaker/src/HighScoreList.txt");
@@ -16,21 +18,21 @@ public class App {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        JFrame obj = new JFrame();
+    public static void main(String[] args) throws Exception{
+        JFrame game = new JFrame();
         Gameplay gameplay = new Gameplay();
         HomePage homePage = new HomePage();
 
         createFile();
 
-        obj.setBounds(10, 10, 700, 600);
-        obj.setTitle("Brick Breaker Game");
-        obj.setResizable(false);
-        obj.setVisible(true);
-        obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        obj.add(homePage);
-        //obj.add(gameplay); 
-
+        game.setSize(700, 600);
+        game.setTitle("Brick Breaker Game");
+        game.setResizable(false);
+        game.setVisible(true);
+        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        game.add(gameplay);
+        // while(!homePage.getgoTo())
+        //     System.out.println("playing");
 
     }
 }
