@@ -9,7 +9,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class HomePage extends JPanel implements KeyListener{
-    public boolean goTo = false;
+    private boolean goTo;
+
+    public HomePage() {
+        this.goTo = false;
+    }
 
     public void setgoTo(boolean value) {
         this.goTo = value;
@@ -32,21 +36,23 @@ public class HomePage extends JPanel implements KeyListener{
         g.drawString("3: ", 50, 250);
         g.drawString("4: ", 50, 325);
         g.drawString("5: ", 50, 400);
-        
+        g.drawString("Press Enter to Start.", 200, 500);
 
         try {
             File file = new File("BrickBreaker/src/HighScoreList.txt");
             Scanner scan = new Scanner(file);
             int x = 100;
             int y = 100;
+            int count = 0;
 
-            while(scan.hasNext()) {
+            while(scan.hasNext() && count < 5) {
                 String name = scan.next();
                 String userScore = scan.next();
                 g.drawString(name, x, y);
                 g.drawString(userScore, x + 300, y);
                 System.out.println(name);
                 y += 75;
+                count++;
             }
             scan.close();
         } catch (Exception e) {
@@ -59,7 +65,7 @@ public class HomePage extends JPanel implements KeyListener{
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ENTER) {
             System.out.println("ENTER PRESSED");
-            setgoTo(true);
+            goTo = true;
         }
     }
 

@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Collections;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
@@ -30,7 +30,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private Mapgenerator map;
     String text = "";
     static File scoreFile = new File("BrickBreaker/src/HighScoreList.txt");
-    List<ScoreList> list = new ArrayList<>();
+    static List<ScoreList> list = new ArrayList<>();
 
     public Gameplay() {
         map = new Mapgenerator(3, 7);
@@ -43,6 +43,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
 
     static int partition(List<ScoreList> array, int firstIndex, int lastIndex) {
         int pivot = array.get(lastIndex).getScore();    // int pivot = array[high];
+        System.out.println("pivot: " + pivot);
         int i = (firstIndex - 1);// int i = (low - 1);
 
         for(int index = firstIndex; index < lastIndex; index++) {
@@ -71,19 +72,17 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         }
     }
 
-    public static void write(String text, int score) {
+    public static void write(List<ScoreList> list) {
+        Collections.reverse(list);
+
         try {
             PrintWriter pw = new PrintWriter("BrickBreaker/src/HighScoreList.txt");
-            Scanner scan = new Scanner(scoreFile);
-            System.out.println("IN WRITE FUNC: " + text);
 
-            if(scoreFile.length() == 0)
-                pw.println(text + " " + score);
-            else {
-
+            for(ScoreList x : list) {
+                System.out.println("Name: " + x.getName() + " Score: " + x.getScore());
+                pw.println(x.getName() + " " + x.getScore());
             }
 
-            pw.println(text + " " + score);
             pw.close();
             System.out.println("Successfully wrote to the file.");
         } catch (Exception e) {
@@ -162,9 +161,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         if(e.getKeyCode() == KeyEvent.VK_D) {
             if(!play && (ballposY > 570 || totalBricks <= 0)){
                 text += e.getKeyChar();
-
-                System.out.println(text);
-                //write(text, score);
             }
 
             if(playerX >= 600)
@@ -175,9 +171,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         if(e.getKeyCode() == KeyEvent.VK_A) {
             if(!play && (ballposY > 570 || totalBricks <= 0)){
                 text += e.getKeyChar();
-
-                System.out.println(text);
-                //write(text, score);
             }
             
             if(playerX < 10)
@@ -189,12 +182,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
             if(!play) {
                 if(text.length() != 0){
                     ScoreList tempScore = new ScoreList(text, score);
-                    list.add(new ScoreList(text, score));
+                    list.add(tempScore);
                     int lastIndex = list.size() - 1;
                     quickSort(list, 0, lastIndex);
 
                     text = "";
                     // WRITE TO FILE.
+                    write(list);
                 }
                 play = true;
                 ballposX = 120;
@@ -211,9 +205,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         }
         if(!play && (ballposY > 570 || totalBricks <= 0)) {
             text += e.getKeyChar();
-
-            System.out.println(text);
-            //write(text, score);
         }
     }
 
@@ -271,8 +262,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                 ballXDir = -ballXDir;
 
         }
-
         repaint();
     }
-    
 }

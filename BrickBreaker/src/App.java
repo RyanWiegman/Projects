@@ -1,9 +1,11 @@
-import javax.swing.JFrame;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 
-public class App {
-    
+import javax.swing.JFrame;
+
+public class App{
 
     public static void createFile() {
         try {
@@ -30,9 +32,12 @@ public class App {
         game.setResizable(false);
         game.setVisible(true);
         game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        game.add(homePage);
+        
+        // while(!homePage.getgoTo()) {
+        //     System.out.println("waiting.");
+        // }
         game.add(gameplay);
-        // while(!homePage.getgoTo())
-        //     System.out.println("playing");
-
+        System.out.println("game finished.");
     }
 }
