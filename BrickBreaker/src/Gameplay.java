@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.Collections;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,14 +33,34 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     String text = "";
     static File scoreFile = new File("BrickBreaker/src/HighScoreList.txt");
     static List<ScoreList> list = new ArrayList<>();
+    private Random random = new Random();
+    private int col = random.nextInt(10) + 5;
+    private int row = random.nextInt(8) + 3;
 
     public Gameplay() {
-        map = new Mapgenerator(3, 7);
+        map = new Mapgenerator(row, col);
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         timer = new Timer(delay, this);
         timer.start();
+        readFile();
+    }
+
+    static void readFile() {
+        try {
+            Scanner scan = new Scanner(scoreFile);
+            while(scan.hasNext()) {
+                String name = scan.next();
+                int score = Integer.parseInt(scan.next());
+
+                list.add(new ScoreList(name, score));
+            }
+
+            scan.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static int partition(List<ScoreList> array, int firstIndex, int lastIndex) {
@@ -116,33 +138,102 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
 
         // THE BALL
         g.setColor(Color.yellow);
-        g.fillOval(ballposX, ballposY, 20, 20);
+        g.fillOval(ballposX, ballposY, 15, 15);
 
         // GAME ENDS
+        // WIN
         if(totalBricks <= 0) {
             play = false;
             ballXDir = 0;
             ballYDir = 0;
+
+            for(int index = 0; index < map.map.length; index++) {
+                for(int j = 0; j < map.map[0].length; j++) {
+                    map.setBrickValue(0, index, j);
+                }
+            }
+
             g.setColor(Color.white);
             g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("You Won! Score: " + score, 150, 50);
+            g.drawString("Enter Name: ", 150, 100);
+            g.drawString(text, 400, 100);
+            g.drawString("Name: ", 150, 200);
+            g.drawString("Score: ", 400, 200);
+            g.drawString("1: ", 50, 250);
+            g.drawString("2: ", 50, 300);
+            g.drawString("3: ", 50, 350);
+            g.drawString("4: ", 50, 400);
+            g.drawString("5: ", 50, 450);
+            g.drawString("Press Enter to Play Again.", 150, 525);
 
-            g.drawString("You Won, Score: " + score, 150, 300);
-            g.drawString("Enter Name: ", 250, 350);
-            g.drawString("Press Enter to Restart.", 350, 350);
+            try {
+                Scanner scan = new Scanner(scoreFile);
+                int x = 100;
+                int y = 250;
+                int count = 0;
+
+                while(scan.hasNext() && count < 5) {
+                    String name = scan.next();
+                    String userScore = scan.next();
+                    g.drawString(name, x, y);
+                    g.drawString(userScore, x + 300, y);
+                    y += 50;
+                    count++;
+                }
+                scan.close();
+            } catch (Exception e) {
+                System.out.println("an error occured");
+                e.printStackTrace();
+            } 
         }
 
+        // LOSE
         if(ballposY > 570) {
             play = false;
             ballXDir = 0;
             ballYDir = 0;
-            g.setColor(Color.white);
-            
-            g.drawString("Game Over, Score: " + score, 150, 300);
-            g.drawString("Enter Name: ", 150, 350);
-            g.drawString(text, 400, 350);
-            g.drawString("Press Enter to Restart.", 150, 450);
-        }
 
+            for(int index = 0; index < map.map.length; index++) {
+                for(int j = 0; j < map.map[0].length; j++) {
+                    map.setBrickValue(0, index, j);
+                }
+            }
+
+            g.setColor(Color.white);
+            g.drawString("Game Over, Score: " + score, 150, 50);
+            g.drawString("Enter Name: ", 150, 100);
+            g.drawString(text, 400, 100);
+
+            g.drawString("Name: ", 150, 200);
+            g.drawString("Score: ", 400, 200);
+            g.drawString("1: ", 50, 250);
+            g.drawString("2: ", 50, 300);
+            g.drawString("3: ", 50, 350);
+            g.drawString("4: ", 50, 400);
+            g.drawString("5: ", 50, 450);
+            g.drawString("Press Enter to Restart.", 150, 525);
+
+            try {
+                Scanner scanner = new Scanner(scoreFile);
+                int x = 100;
+                int y = 250;
+                int count = 0;
+
+                while(scanner.hasNext() && count < 5) {
+                    String name = scanner.next();
+                    String userScore = scanner.next();
+                    g.drawString(name, x, y);
+                    g.drawString(userScore, x + 300, y);
+                    y += 50;
+                    count++;
+                }
+                scanner.close();
+            } catch (Exception e) {
+                System.out.println("an error occured");
+                e.printStackTrace();
+            }   
+        }
         g.dispose();
     }
 
@@ -198,7 +289,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                 playerX = 310;
                 score = 0;
                 totalBricks = 21;
-                map = new Mapgenerator(3, 7);
+                col = random.nextInt(10) + 5;
+                row = random.nextInt(8) + 3;
+                map = new Mapgenerator(row, col);
 
                 repaint();
             }

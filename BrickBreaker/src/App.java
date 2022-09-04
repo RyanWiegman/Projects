@@ -1,5 +1,3 @@
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,7 +21,6 @@ public class App{
     public static void main(String[] args) throws Exception{
         JFrame game = new JFrame();
         Gameplay gameplay = new Gameplay();
-        HomePage homePage = new HomePage();
 
         createFile();
 
@@ -32,11 +29,6 @@ public class App{
         game.setResizable(false);
         game.setVisible(true);
         game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        game.add(homePage);
-        
-        // while(!homePage.getgoTo()) {
-        //     System.out.println("waiting.");
-        // }
         game.add(gameplay);
         System.out.println("game finished.");
     }
