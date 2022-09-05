@@ -20,20 +20,24 @@ import java.awt.Rectangle;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private boolean play = false;
+    private Random random = new Random();
     private int score = 0;
     private int totalBricks = 21;
     private Timer timer;
     private int delay = 8;
     private int playerX = 310;
-    private int ballposX = 120;
-    private int ballposY = 350;
-    private int ballXDir = -1;
-    private int ballYDir = -2;
+    private int ballposX = 330;
+    private int ballposY = 530;
+    private int[] xDir = {-2, -1, 1, 2};
+    private int[] yDir = {-4, -3, -2, 2, 3, 4};
+    private int xIndex = random.nextInt(4);
+    private int ballXDir = 2;//xDir[xIndex];
+    private int yIndex = random.nextInt(4);
+    private int ballYDir = yDir[yIndex];
     private Mapgenerator map;
     String text = "";
     static File scoreFile = new File("BrickBreaker/src/HighScoreList.txt");
     static List<ScoreList> list = new ArrayList<>();
-    private Random random = new Random();
     private int col = random.nextInt(10) + 5;
     private int row = random.nextInt(8) + 3;
 
