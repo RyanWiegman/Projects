@@ -31,7 +31,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private int[] xDir = {-2, -1, 1, 2};
     private int[] yDir = {-4, -3, -2, 2, 3, 4};
     private int xIndex = random.nextInt(4);
-    private int ballXDir = 2;//xDir[xIndex];
+    private int ballXDir = xDir[xIndex];
     private int yIndex = random.nextInt(4);
     private int ballYDir = yDir[yIndex];
     private Mapgenerator map;
