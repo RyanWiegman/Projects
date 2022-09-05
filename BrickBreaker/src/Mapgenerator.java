@@ -1,4 +1,5 @@
 import java.awt.Graphics2D;
+import java.util.Random;
 import java.awt.Color;
 import java.awt.BasicStroke;
 
@@ -6,6 +7,7 @@ public class Mapgenerator {
     public int map[][];
     public int brickWidth;
     public int brickHeight;
+    public Random rand = new Random();
     
     public Mapgenerator(int row, int col) {
         map = new int[row][col];

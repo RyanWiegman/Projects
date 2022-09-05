@@ -178,7 +178,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
             g.drawString("3: ", 50, 350);
             g.drawString("4: ", 50, 400);
             g.drawString("5: ", 50, 450);
-            g.drawString("Press Enter to Play Again.", 150, 525);
+            g.drawString("Press Enter to Continue.", 150, 525);
 
             try {
                 Scanner scan = new Scanner(scoreFile);
@@ -295,17 +295,22 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                     // WRITE TO FILE.
                     write(list);
                 }
+
+                if(totalBricks == 0){
+                    col = random.nextInt(10) + 5;
+                    row = random.nextInt(8) + 3;
+                    totalBricks = row * col;
+                    points = 100 / (row * col);
+                }
+                if(ballposY > 570){
+                    score = 0;
+                }             
                 play = true;
                 ballposX = 330;
                 ballposY = 530;
                 ballXDir = -1;
                 ballYDir = -2;
                 playerX = 310;
-                score = 0;
-                totalBricks = row * col;
-                col = random.nextInt(10) + 5;
-                row = random.nextInt(8) + 3;
-                points = 100 / (row * col);
                 System.out.println("points: " + points);
                 map = new Mapgenerator(row, col);
 
