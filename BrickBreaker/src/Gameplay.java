@@ -22,7 +22,6 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private boolean play = false;
     private Random random = new Random();
     private int score = 0;
-    private int totalBricks = 21;
     private Timer timer;
     private int delay = 8;
     private int playerX = 310;
@@ -38,8 +37,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     String text = "";
     static File scoreFile = new File("BrickBreaker/src/HighScoreList.txt");
     static List<ScoreList> list = new ArrayList<>();
-    private int col = random.nextInt(10) + 5;
+    private int col = random.nextInt(7) + 5;
     private int row = random.nextInt(8) + 3;
+    private int totalBricks = col * row;
+    private int deleteChar = 0;
+    private int points = 100 / (row * col);
 
     public Gameplay() {
         map = new Mapgenerator(row, col);
@@ -115,6 +117,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
             System.out.println("an error occured.");
             e.printStackTrace();
         }
+    }
+
+    public String delString(String text) {
+        String temp = "";
+        temp = text.substring(0, text.length() - 1);
+
+        return temp;
     }
 
     public void paint(Graphics g) {
@@ -277,6 +286,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
             if(!play) {
                 if(text.length() != 0){
                     ScoreList tempScore = new ScoreList(text, score);
+                    System.out.println("deletecount: " + deleteChar);
                     list.add(tempScore);
                     int lastIndex = list.size() - 1;
                     quickSort(list, 0, lastIndex);
@@ -286,21 +296,28 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                     write(list);
                 }
                 play = true;
-                ballposX = 120;
-                ballposY = 350;
+                ballposX = 330;
+                ballposY = 530;
                 ballXDir = -1;
                 ballYDir = -2;
                 playerX = 310;
                 score = 0;
-                totalBricks = 21;
+                totalBricks = row * col;
                 col = random.nextInt(10) + 5;
                 row = random.nextInt(8) + 3;
+                points = 100 / (row * col);
+                System.out.println("points: " + points);
                 map = new Mapgenerator(row, col);
 
                 repaint();
             }
         }
-        if(!play && (ballposY > 570 || totalBricks <= 0)) {
+        if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+            System.out.println("Backspace pressed.");
+
+            text = delString(text);
+        }
+        if(!play && (ballposY > 570 || totalBricks <= 0) && (e.getKeyCode() != KeyEvent.VK_BACK_SPACE)) {
             text += e.getKeyChar();
         }
     }
@@ -337,7 +354,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                         if(ballRect.intersects(brickRect)) {
                             map.setBrickValue(0, index, j);
                             totalBricks--;
-                            score += 5;
+                            score += points;
 
                             if(ballposX + 19 <= brickRect.x || ballposX + 1 >= brickRect.x + brickRect.width) {
                                 ballXDir = -ballXDir;
