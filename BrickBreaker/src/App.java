@@ -7,7 +7,7 @@ public class App{
 
     public static void createFile() {
         try {
-            File highScore = new File("BrickBreaker/src/HighScoreList.txt");
+            File highScore = new File("C:/workspace/Projects/BrickBreaker/src/HighScoreList.txt");
             if(highScore.createNewFile())
                 System.out.println("File Created: " + highScore.getName());
             else

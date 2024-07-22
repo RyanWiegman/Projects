@@ -35,7 +35,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private int ballYDir = yDir[yIndex];
     private Mapgenerator map;
     String text = "";
-    static File scoreFile = new File("BrickBreaker/src/HighScoreList.txt");
+    static File scoreFile = new File("C:/workspace/Projects/BrickBreaker/src/HighScoreList.txt");
     static List<ScoreList> list = new ArrayList<>();
     private int col = random.nextInt(7) + 5;
     private int row = random.nextInt(8) + 3;
@@ -104,8 +104,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         Collections.reverse(list);
 
         try {
-            PrintWriter pw = new PrintWriter("BrickBreaker/src/HighScoreList.txt");
-
+            PrintWriter pw = new PrintWriter("C:/workspace/Projects/BrickBreaker/src/HighScoreList.txt");
             for(ScoreList x : list) {
                 System.out.println("Name: " + x.getName() + " Score: " + x.getScore());
                 pw.println(x.getName() + " " + x.getScore());
